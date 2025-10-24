@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/ venv/ .env
+
+# Build/Node
+dist/ build/ node_modules/
+
+# Data / outputs / models
+data/ datasets/ out/ outputs/ logs/ checkpoints/ models/
+*.keras *.h5 *.hdf5 *.tflite *.onnx *.pt *.pth
+*.pkl *.joblib *.npy *.npz *.parquet *.csv
+
+# Media
+*.mp4 *.mov *.avi *.mkv
+*.jpg *.jpeg *.png
