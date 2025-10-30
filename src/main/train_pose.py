@@ -26,27 +26,26 @@ from tensorflow.keras import layers, models, callbacks, regularizers
 from tensorflow.keras.callbacks import CSVLogger, TensorBoard
 
 # ===== CẤU HÌNH =====
-CSV_DIR   = "data/csv"
+CSV_DIR   = "data/csv/csv"
 OUT_DIR   = "out"
 os.makedirs(OUT_DIR, exist_ok=True)
 
 SEQ_LEN         = 30
 TRAIN_STEP      = 5
 VAL_TEST_STEP   = 1
-VAL_SIZE        = 0.15
 TEST_SIZE       = 0.15
 RANDOM_SEED     = 42
 MAJORITY_RATIO_MIN = 0.8
 
 # Regularization/kiến trúc
-L2W = 1e-3
-GAUSS_NOISE_STD = 0.02
-SPATIAL_DROPOUT = 0.30
-GRU_UNITS = 96
-GRU_REC_DROPOUT = 0.25
-DENSE_UNITS = 96
+L2W = 1e-3              # hệ số L2 weight decay phạt loss trọng số mô hình
+GAUSS_NOISE_STD = 0.02  #tăng độ nhiễu Gaussian
+SPATIAL_DROPOUT = 0.30  # tắt kênh đặt trưng của Conv1D
+GRU_UNITS = 96          # ô nhớ của GRU
+GRU_REC_DROPOUT = 0.25  # tắt lức nhớ lại của GRU
+DENSE_UNITS = 96        # đơn vị dense cuối
 
-USE_CLASS_WEIGHT = False
+USE_CLASS_WEIGHT = False # khi mà dữ liệu của các dạng pose chênh lệch nhiều cần nó để phạt cái thằng ít hơn
 BATCH_SIZE = 64
 EPOCHS = 100
 
@@ -55,7 +54,7 @@ META_COLS = {"label", "video_path", "frame", "time_s"}
 # ===== ENV INFO =====
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 print("TensorFlow:", tf.__version__)
-print("Using tf.keras only ✅")
+print("Using tf.keras only ")
 
 try:
     gpus = tf.config.list_physical_devices('GPU')
@@ -86,19 +85,19 @@ COCO17_ORDER = [
 def load_all_csv(csv_dir):
     paths = sorted(glob.glob(os.path.join(csv_dir, "**/*.csv"), recursive=True))
     assert paths, f"Không tìm thấy CSV trong {csv_dir}"
-    dfs = []
-    for p in paths:
-        df = pd.read_csv(p)
-        df.columns = [c.strip() for c in df.columns]
-        # Đảm bảo tồn tại video_path/label nếu chưa có (phòng hờ)
-        if "video_path" not in df.columns:
-            df["video_path"] = os.path.relpath(p, csv_dir)
-        if "label" not in df.columns:
-            # cố gắng lấy label từ đường dẫn cha (vd: .../Padamasana/video 9.csv)
-            parts = os.path.normpath(p).split(os.sep)
-            df["label"] = parts[-2] if len(parts) >= 2 else "Unknown"
-        dfs.append(df)
-    df = pd.concat(dfs, ignore_index=True)
+    #dfs = []
+    # for p in paths:
+    #     df = pd.read_csv(p)
+    #     df.columns = [c.strip() for c in df.columns]
+    #     # # Đảm bảo tồn tại video_path/label nếu chưa có (phòng hờ)
+    #     # if "video_path" not in df.columns:
+    #     #     df["video_path"] = os.path.relpath(p, csv_dir)
+    #     # if "label" not in df.columns:
+    #     #     # cố gắng lấy label từ đường dẫn cha (vd: .../Padamasana/video 9.csv)
+    #     #     parts = os.path.normpath(p).split(os.sep)
+    #     #     df["label"] = parts[-2] if len(parts) >= 2 else "Unknown"
+    #     dfs.append(df)
+    # df = pd.concat(dfs, ignore_index=True)
 
     # Chuẩn kiểu
     if "frame" in df.columns:  df["frame"]  = pd.to_numeric(df["frame"],  errors="coerce").fillna(0).astype(int)
@@ -160,17 +159,14 @@ print("Classes:", classes)
 
 # ===== SPLIT THEO VIDEO =====
 gss = GroupShuffleSplit(n_splits=1, test_size=TEST_SIZE, random_state=RANDOM_SEED)
-train_val_idx, test_idx = next(gss.split(df, groups=df["video_path"]))
-df_train_val = df.iloc[train_val_idx].copy()
-df_test      = df.iloc[test_idx].copy()
+train_idx, test_idx = next(gss.split(df, groups=df["video_path"]))
+df_train = df.iloc[train_idx].copy()
+df_test  = df.iloc[test_idx].copy()
 
-gss2 = GroupShuffleSplit(n_splits=1, test_size=VAL_SIZE/(1-TEST_SIZE), random_state=RANDOM_SEED)
-tr_idx, val_idx = next(gss2.split(df_train_val, groups=df_train_val["video_path"]))
-df_train = df_train_val.iloc[tr_idx].copy()
-df_val   = df_train_val.iloc[val_idx].copy()
 
-print("Số frame: train/val/test =", len(df_train), len(df_val), len(df_test))
-print("Số video  :", df_train.video_path.nunique(), df_val.video_path.nunique(), df_test.video_path.nunique())
+
+print("Số frame: train/val/test =", len(df_train), len(df_test))
+print("Số video  :", df_train.video_path.nunique(), df_test.video_path.nunique())
 
 # ===== SCALER (fit trên TRAIN) =====
 scaler = StandardScaler()
@@ -209,17 +205,14 @@ def make_windows_from_df(df_part, seq_len=30, step=1):
     return np.array(Xs, dtype=np.float32), np.array(ys, dtype=np.int64)
 
 X_train, y_train = make_windows_from_df(df_train, SEQ_LEN, TRAIN_STEP)
-X_val,   y_val   = make_windows_from_df(df_val,   SEQ_LEN, VAL_TEST_STEP)
 X_test,  y_test  = make_windows_from_df(df_test,  SEQ_LEN, VAL_TEST_STEP)
 
 print("Shapes:")
 print("  X_train", X_train.shape, "y_train", y_train.shape)
-print("  X_val  ", X_val.shape,   "y_val  ", y_val.shape)
 print("  X_test ", X_test.shape,  "y_test ", y_test.shape)
 
 np.savez_compressed(os.path.join(OUT_DIR, "dataset_seq.npz"),
                     X_train=X_train, y_train=y_train,
-                    X_val=X_val, y_val=y_val,
                     X_test=X_test, y_test=y_test,
                     classes=np.array(classes))
 
@@ -274,13 +267,13 @@ if USE_CLASS_WEIGHT and len(np.unique(y_train)) > 1:
 # ===== TRAIN =====
 history = model.fit(
     X_train, y_train,
-    validation_data=(X_val, y_val),
     batch_size=BATCH_SIZE,
     epochs=EPOCHS,
     callbacks=cbs,
     verbose=1,
     **fit_kwargs
 )
+
 
 # (BỔ SUNG) Lưu history ra CSV (phòng khi không dùng CSVLogger)
 try:
@@ -364,12 +357,10 @@ exp_info = {
         "feature_cols_sample": feature_cols[:10],
         "frames_split": {
             "train": int(len(df_train)),
-            "val": int(len(df_val)),
             "test": int(len(df_test))
         },
         "videos_split": {
             "train": int(df_train.video_path.nunique()),
-            "val": int(df_val.video_path.nunique()),
             "test": int(df_test.video_path.nunique())
         },
         "seq_settings": {
@@ -380,7 +371,6 @@ exp_info = {
         }
     },
     "hyperparams": {
-        "VAL_SIZE": VAL_SIZE,
         "TEST_SIZE": TEST_SIZE,
         "RANDOM_SEED": RANDOM_SEED,
         "L2W": L2W,
