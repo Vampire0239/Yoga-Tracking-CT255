@@ -9,8 +9,19 @@ from collections import Counter
 from joblib import load
 import tensorflow as tf
 
+
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--video_path", type=str, required=True,
+                    help="Path to input video file")
+parser.add_argument("--out", type=str, default=64, help="out")
+args = parser.parse_args()
+
+
 # ===== Cấu hình =====
-VIDEO_PATH = "/home/B2205945-CT255/ProJect_yolo/data/raw/dataset/test/Vrikshasana/video 12.mp4"
+VIDEO_PATH = args.video_path
 MODEL_PATH = "yolov8n-pose.pt"  # hoặc yolov8m-pose.pt
 
 
@@ -69,7 +80,7 @@ cap.release()
 df = pd.DataFrame(rows, columns=columns)
 
 
-OUT_DIR     = "out"
+OUT_DIR     = args.out
 MODEL_PATH  = os.path.join(OUT_DIR, "best_model.keras")
 SCALER_PATH = os.path.join(OUT_DIR, "scaler.pkl")
 CLASSES_PATH = os.path.join(OUT_DIR, "classes.txt")

@@ -7,9 +7,9 @@ from pathlib import Path
 import glob
 
 # ===== Cấu hình =====
-VIDEO_PATH = "/home/B2205945-CT255/ProJect_yolo/data/raw/dataset/train/**/*.mp4"
+VIDEO_PATH = "/home/B2205945-CT255/ProJect_yolo/data/raw/dataset/test/Padamasana/video_12.mp4"
 MODEL_PATH = "yolov8n-pose.pt"  # hoặc yolov8m-pose.pt
-OUT_DIR = Path("/home/B2205945-CT255/ProJect_yolo/data/csv")
+OUT_DIR = Path("/home/B2205945-CT255/ProJect_yolo/test demo")
 OUT_CSV_DIR = OUT_DIR / "csv"
 
 # ===== Load model =====

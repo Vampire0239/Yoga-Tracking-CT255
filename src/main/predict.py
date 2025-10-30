@@ -20,7 +20,7 @@ SCALER_PATH = os.path.join(OUT_DIR, "scaler.pkl")
 CLASSES_PATH = os.path.join(OUT_DIR, "classes.txt")
 FEATCOLS_PATH = os.path.join(OUT_DIR, "feature_cols.txt")
 
-CSV_PATH    = "/home/B2205945-CT255/ProJect_yolo/data/test_csv/csv/test/Trikasana/video 12.csv"
+CSV_PATH    = "/home/B2205945-CT255/ProJect_yolo/test demo/csv/test/Tadasana/video 13.csv"
 SEQ_LEN     = 30
 STEP        = 1
 

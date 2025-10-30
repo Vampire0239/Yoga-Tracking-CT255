@@ -46,7 +46,7 @@ GRU_UNITS = 96             # số ô nhớ của GRU
 GRU_REC_DROPOUT = 0.25     # dropout trong nhánh hồi tiếp GRU
 DENSE_UNITS = 96
 
-USE_CLASS_WEIGHT = False
+USE_CLASS_WEIGHT = False    # cân bằng lớp khi train
 BATCH_SIZE = 64
 EPOCHS = 100
 
