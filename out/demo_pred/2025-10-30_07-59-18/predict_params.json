@@ -1,7 +1,0 @@
-{
-  "csv_dir": "data/csv",
-  "video_path": "data/test/Bhujasana/video13.mp4",
-  "overlay": true,
-  "show_window": false,
-  "resolved_out_dir": "out/demo_pred/2025-10-30_07-59-18"
-}

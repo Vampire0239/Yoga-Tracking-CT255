@@ -1,0 +1,45 @@
+{
+  "Bhujasana": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2646.0
+  },
+  "Padamasana": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2189.0
+  },
+  "Tadasana": {
+    "precision": 0.999252895031752,
+    "recall": 0.999626307922272,
+    "f1-score": 0.9994395665981692,
+    "support": 2676.0
+  },
+  "Trikasana": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2138.0
+  },
+  "Vrikshasana": {
+    "precision": 0.9996580027359782,
+    "recall": 0.9993162393162394,
+    "f1-score": 0.9994870918105659,
+    "support": 2925.0
+  },
+  "accuracy": 0.9997614124383649,
+  "macro avg": {
+    "precision": 0.999782179553546,
+    "recall": 0.9997885094477021,
+    "f1-score": 0.9997853316817469,
+    "support": 12574.0
+  },
+  "weighted avg": {
+    "precision": 0.9997614446562514,
+    "recall": 0.9997614124383649,
+    "f1-score": 0.9997614143281855,
+    "support": 12574.0
+  }
+}
