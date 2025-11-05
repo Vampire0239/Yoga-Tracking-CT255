@@ -23,8 +23,9 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 
 import tensorflow as tf
-from tensorflow.keras import layers, models, callbacks, regularizers
-from tensorflow.keras.callbacks import CSVLogger, TensorBoard
+from keras import layers, models, callbacks, regularizers
+from keras.callbacks import CSVLogger, TensorBoard
+
 
 # ===== CẤU HÌNH =====
 CSV_DIR   = "data/csv"

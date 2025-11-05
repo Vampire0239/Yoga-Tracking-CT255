@@ -1,0 +1,33 @@
+name: yoloProject
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.26.*
+  - pandas=2.3.*
+  - scikit-learn=1.5.*
+  - matplotlib
+  - h5py
+  - tqdm
+  - requests
+  - typing_extensions
+  - certifi
+  - setuptools
+  - wheel
+  - pip:
+      # ===== Giữ lại như bạn yêu cầu =====
+      - tensorflow==2.20.0
+      - keras==3.11.3
+      - tensorboard==2.20.0
+      - opencv-python==4.12.0.88
+      # ===== YOLO/vision =====
+      - ultralytics==8.3.212
+      # PyTorch: để dùng Ultralytics (CPU ok). Bỏ triton & nvidia-* trên Windows
+      - torch==2.8.0
+      - torchvision==0.23.0
+      # ===== Tiện ích khác bạn đang dùng =====
+      - rich==14.2.0
+      - psutil
+      - pandas==2.3.3

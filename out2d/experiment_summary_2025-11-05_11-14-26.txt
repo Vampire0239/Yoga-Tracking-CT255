@@ -1,0 +1,100 @@
+=== EXPERIMENT SUMMARY ===
+{
+  "timestamp": "2025-11-05_11-14-26",
+  "python_version": "3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:23:22) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "tensorflow_version": "2.20.0",
+  "gpus": [],
+  "paths": {
+    "CSV_DIR": "data/csv",
+    "OUT_DIR": "out2d"
+  },
+  "data_info": {
+    "num_rows_total": 74737,
+    "num_videos_total": 56,
+    "num_classes": 5,
+    "classes": [
+      "Bhujasana",
+      "Padamasana",
+      "Tadasana",
+      "Trikasana",
+      "Vrikshasana"
+    ],
+    "feature_cols_count": 34,
+    "feature_cols_sample": [
+      "nose_x",
+      "nose_y",
+      "l_eye_x",
+      "l_eye_y",
+      "r_eye_x",
+      "r_eye_y",
+      "l_ear_x",
+      "l_ear_y",
+      "r_ear_x",
+      "r_ear_y"
+    ],
+    "frames_split": {
+      "train": 64154,
+      "test": 10583
+    },
+    "videos_split": {
+      "train": 47,
+      "test": 9
+    },
+    "seq_settings": {
+      "SEQ_LEN": 30,
+      "TRAIN_STEP": 5,
+      "VAL_TEST_STEP": 1,
+      "MAJORITY_RATIO_MIN": 0.8
+    }
+  },
+  "hyperparams": {
+    "TEST_SIZE": 0.15,
+    "RANDOM_SEED": 42,
+    "L2W": 0.001,
+    "GAUSS_NOISE_STD": 0.02,
+    "SPATIAL_DROPOUT": 0.3,
+    "GRU_UNITS": 96,
+    "GRU_REC_DROPOUT": 0.25,
+    "DENSE_UNITS": 96,
+    "USE_CLASS_WEIGHT": false,
+    "BATCH_SIZE": 64,
+    "EPOCHS": 100,
+    "optimizer": "Adam(3e-4)",
+    "loss": "sparse_categorical_crossentropy",
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "artifacts": {
+    "best_model": "out2d\\best_model.keras",
+    "last_model": "out2d\\last_model.keras",
+    "h5_model": "out2d\\best_model_tf.h5",
+    "savedmodel_dir": "out2d\\best_model_savedmodel",
+    "scaler": "out2d\\scaler.pkl",
+    "classes_txt": "out2d\\classes.txt",
+    "feature_cols_txt": "out2d\\feature_cols.txt",
+    "training_log_csv": "out2d\\training_log.csv",
+    "tensorboard_dir": "out2d\\tb_logs",
+    "history_csv": "out2d\\history.csv",
+    "train_report_txt": "out2d\\train_classification_report.txt",
+    "train_report_json": "out2d\\train_classification_report.json",
+    "train_cm_csv": "out2d\\train_confusion_matrix.csv",
+    "train_cm_png": "out2d\\train_cm_gray.png",
+    "train_cm_norm_png": "out2d\\train_cm_gray_norm.png",
+    "train_y_true": "out2d\\train_y_true.npy",
+    "train_y_pred": "out2d\\train_y_pred.npy",
+    "train_probs": "out2d\\train_probs.npy",
+    "test_report_txt": "out2d\\test_classification_report.txt",
+    "test_report_json": "out2d\\test_classification_report.json",
+    "test_cm_csv": "out2d\\test_confusion_matrix.csv",
+    "test_cm_png": "out2d\\test_cm_gray.png",
+    "test_cm_norm_png": "out2d\\test_cm_gray_norm.png",
+    "test_y_true": "out2d\\test_y_true.npy",
+    "test_y_pred": "out2d\\test_y_pred.npy",
+    "test_probs": "out2d\\test_probs.npy",
+    "dataset_npz": "out2d\\dataset_seq.npz"
+  },
+  "model_summary": "Model: \"functional\"\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓\n┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩\n│ input_layer (InputLayer)             │ (None, 30, 17, 2, 1)        │               0 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed (TimeDistributed)   │ (None, 30, 17, 2, 1)        │               0 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_1 (TimeDistributed) │ (None, 30, 17, 2, 64)       │             448 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_2 (TimeDistributed) │ (None, 30, 17, 2, 64)       │             256 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_3 (TimeDistributed) │ (None, 30, 8, 2, 64)        │               0 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_4 (TimeDistributed) │ (None, 30, 8, 2, 128)       │          49,280 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_5 (TimeDistributed) │ (None, 30, 8, 2, 128)       │             512 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_6 (TimeDistributed) │ (None, 30, 8, 2, 128)       │               0 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ time_distributed_7 (TimeDistributed) │ (None, 30, 2048)            │               0 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ bidirectional (Bidirectional)        │ (None, 192)                 │       1,236,096 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ dropout_1 (Dropout)                  │ (None, 192)                 │               0 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ dense (Dense)                        │ (None, 96)                  │          18,528 │\n├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤\n│ dense_1 (Dense)                      │ (None, 5)                   │             485 │\n└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘\n Total params: 3,916,049 (14.94 MB)\n Trainable params: 1,305,221 (4.98 MB)\n Non-trainable params: 384 (1.50 KB)\n Optimizer params: 2,610,444 (9.96 MB)\n\n",
+  "notes": "Thực nghiệm (train/test) + Confusion Matrix gray_r (kèm số) cho cả train & test."
+}

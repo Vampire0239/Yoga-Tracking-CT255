@@ -1,0 +1,11 @@
+              precision    recall  f1-score   support
+
+   Bhujasana     1.0000    1.0000    1.0000      1714
+  Padamasana     1.0000    1.0000    1.0000      2643
+    Tadasana     1.0000    0.9204    0.9585      2135
+   Trikasana     0.9846    1.0000    0.9922      2616
+ Vrikshasana     0.9039    1.0000    0.9496      1214
+
+    accuracy                         0.9835     10322
+   macro avg     0.9777    0.9841    0.9801     10322
+weighted avg     0.9848    0.9835    0.9835     10322
